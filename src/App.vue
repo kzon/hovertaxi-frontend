@@ -1,8 +1,12 @@
 <template>
   <div id="app">
-    <Map></Map>
-    <div class="right">
-      <router-view/>
+    <div class="row">
+      <div class="col-sm-6">
+        <Map></Map>
+      </div>
+      <div class="col-sm-6">
+        <router-view/>
+      </div>
     </div>
   </div>
 </template>
