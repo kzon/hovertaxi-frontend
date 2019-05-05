@@ -2,7 +2,7 @@ import testPoints from '../../data/test'
 import aircraftRequests from '../../utilities/requests/aircraftRequests'
 
 //in ms
-const INTERVAL = 500;
+const INTERVAL = 1000;
 const presetForAircraft = {
   preset: 'islands#circleIcon',
   iconColor: '#3caa3c'
