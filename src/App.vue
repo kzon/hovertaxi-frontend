@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <div class="row">
-      <div class="col-sm-6">
+    <div class="row" style="margin: 5rem">
+      <div class="col-sm-8">
         <Map></Map>
       </div>
-      <div class="col-sm-6">
+      <div class="col-sm-4">
         <router-view/>
       </div>
     </div>
