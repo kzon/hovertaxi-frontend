@@ -9,9 +9,8 @@ class Http {
 
     return fetch(url,
       {
-        method: 'GET',
-        mode: 'cors',
-        credentials: 'include'
+        method: "GET",
+        mode: "cors"
       })
       .then(function(response){
         if(response.status >= 400) throw response;
@@ -24,12 +23,11 @@ class Http {
     const url = baseUrl + path;
 
     return fetch(url, {
-      method: 'POST',
-      mode: 'cors',
-      credentials: 'include',
+      method: "POST",
+      mode: "cors",
       body: JSON.stringify(body),
       headers: {
-        'Content-Type': 'application/json; charset=UTF-8'
+        "Content-Type": "application/json"
       }
     })
     .then(function(response){
