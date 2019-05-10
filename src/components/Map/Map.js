@@ -1,4 +1,4 @@
-import routes from '../../data/test'
+import routes from '../../data/demo'
 import aircraftRequests from '../../utilities/requests/aircraftRequests'
 
 //in ms
@@ -17,20 +17,29 @@ export default {
   name: 'Map',
   components: {},
   props: [],
-  data () {
+
+  data() {
     return {
-      map: Object
+      map: Object,
+      from_pad_id: null,
+      to_pad_id: null,
     }
   },
-  created (){
 
+  created() {
     var self = this;
     ymaps.ready(init);
 
-    function init () {
+    function init() {
       self.map = new ymaps.Map('map', {
         center: [55.76, 37.64], // Москва
-        zoom: 10
+        zoom: 12,
+        controls: [],
+      });
+
+      self.map.events.add('click', function (e) {
+        self.from_pad_id = 5;
+        self.to_pad_id = 6;
       });
 
       // self.demoAircrafts();
@@ -39,8 +48,9 @@ export default {
 
     }
   },
+
   methods: {
-    testRoutes(){
+    testRoutes() {
       try {
         let self = this;
 
@@ -60,27 +70,28 @@ export default {
             let route = routes[object.properties.get("id")];
             route.curIdx = route.curIdx + 1;
             let coords = route[route.curIdx];
-            if(coords !== undefined){
+            if (coords !== undefined) {
               let pos = [coords[1], coords[0]];
               object.geometry.setCoordinates(pos);
             }
           }
 
         }, INTERVAL);
-      }
-      catch(error){
+      } catch (error) {
         console.log(error);
       }
 
     },
-    createGeoObjectFromAircraft(aircraft){
+
+    createGeoObjectFromAircraft(aircraft) {
       let pts = JSON.parse(aircraft.position),
         position = [pts[0], pts[1]];
       console.log('position ', position);
 
       return this.createGeoObject(position, aircraft.id);
     },
-    createGeoObject(position, id){
+
+    createGeoObject(position, id) {
       return new ymaps.GeoObject({
         geometry: {
           type: "Point",
@@ -97,6 +108,7 @@ export default {
         draggable: false
       });
     },
+
     async demoAircrafts() {
       try {
         let self = this,
@@ -112,7 +124,7 @@ export default {
 
         self.map.geoObjects.add(geoCollection);
 
-        let timer = setInterval(async function(){
+        let timer = setInterval(async function () {
           let iterator = geoCollection.getIterator(), object;
           while ((object = iterator.getNext()) !== iterator.STOP_ITERATION) {
             let aircraft = aircrafts.find(a => a.id === object.properties.get("id"));
@@ -128,19 +140,20 @@ export default {
         console.error(error);
       }
     },
-    async createPads(){
+
+    async createPads() {
 
       let self = this, position = [55.750512, 37.539209];
 
       let pads = await aircraftRequests.loadNearestPads(position);
       let geoCollection = new ymaps.GeoObjectCollection(null, presetForPad);
 
-      pads.forEach(function(pad) {
-        try{
+      pads.forEach(function (pad) {
+        try {
           let pts = JSON.parse(pad.position), pos = [pts[0], pts[1]];
           let geoObject = new ymaps.Placemark(pos, {}, presetForPad);
           geoCollection.add(geoObject);
-        }catch(err){
+        } catch (err) {
           console.log(err);
         }
       });

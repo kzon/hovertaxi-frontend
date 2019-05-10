@@ -1,11 +1,48 @@
-.border{
-  border-radius: 5px;
-}
+.order-form {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+  width: 270px;
+  padding: 20px;
 
-.content{
-  margin: 1rem;
-}
+  .order-form-row {
+    margin-bottom: 10px;
 
-.item{
-  margin-bottom: 1rem;
+    input, button {
+      box-shadow: 0 2px 4px 1px #afafaf66;
+      border-radius: 4px;
+      transition: all .3s;
+    }
+
+    input {
+      width: 100%;
+      padding: .3em .6em;
+      border: 2px solid #ffeb86;
+      outline: none;
+      font-size: 1.1em;
+
+      &:focus {
+        border-color: #ffd501;
+      }
+
+      &::placeholder {
+        font-size: 0.8em;
+      }
+    }
+
+    button.order-button {
+      width: 100%;
+      background: #ffeb86;
+      padding: 0.8em .4em;
+      outline: none;
+      border: none;
+      font-weight: bold;
+      font-size: 1.2em;
+
+      &:hover {
+        background-color: #ffe251;
+      }
+    }
+  }
 }
