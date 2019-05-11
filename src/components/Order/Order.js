@@ -1,4 +1,4 @@
-import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED} from '../../utilities/event/event'
+import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED, EVENT_PRE_ORDER_INFO_LOADED} from '../../utilities/event/event'
 import orderRequests from '../../utilities/requests/orderRequests'
 import aircraftRequests from '../../utilities/requests/aircraftRequests'
 import Icon from '../Icon/index'
@@ -14,39 +14,25 @@ export default {
       selectedToPad: null,
       selectedAircraftClass: null,
       aircraftClasses: [],
+      preOrderInfo: null,
     }
   },
 
   computed: {
-    preOrderInfo: function () {
-      if (!this.orderFieldsFilled)
-        return null;
-
-      return {
-        "route": {
-          "points": [
-            [
-              58.1243,
-              32.42134
-            ],
-            [
-              58.1243,
-              32.42134
-            ],
-            [
-              58.1243,
-              32.42134
-            ]
-          ],
-          "time": 8
-        },
-        "price": 755
-      };
-    },
-
     orderFieldsFilled: function () {
-      return this.selectedFromPad !== null && this.selectedToPad !== null && this.selectedAircraftClass !== null;
+      return this.selectedFromPad && this.selectedToPad && this.selectedAircraftClass;
     },
+  },
+
+  watch: {
+    orderFieldsFilled: async function () {
+      if (this.orderFieldsFilled) {
+        this.preOrderInfo = await orderRequests.getPreOrderInfo(
+          this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id
+        );
+        eventBus.$emit(EVENT_PRE_ORDER_INFO_LOADED, this.preOrderInfo);
+      }
+    }
   },
 
   async mounted() {

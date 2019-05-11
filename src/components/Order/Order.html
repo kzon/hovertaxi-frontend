@@ -1,13 +1,13 @@
 <div class="order-form" xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="order-form-row">
     <input type="text" placeholder="Откуда – выберите площадку на карте" class="order-form-container" disabled
-           :value="selectedFromPad === null ? '' : selectedFromPad.name">
-      <Icon class="clear-button" icon="close" v-show="selectedFromPad !== null" @click.native="selectedFromPad = null"></Icon>
+           :value="selectedFromPad ? selectedFromPad.name : ''">
+      <Icon class="clear-button" icon="close" v-show="selectedFromPad" @click.native="selectedFromPad = null"></Icon>
   </div>
   <div class="order-form-row">
     <input type="text" placeholder="Куда – выберите площадку на карте" class="order-form-container" disabled
-           :value="selectedToPad === null ? '' : selectedToPad.name">
-    <Icon class="clear-button" icon="close" v-show="selectedToPad !== null" @click.native="selectedToPad = null"></Icon>
+           :value="selectedToPad ? selectedToPad.name : ''">
+    <Icon class="clear-button" icon="close" v-show="selectedToPad" @click.native="selectedToPad = null"></Icon>
   </div>
   <div class="order-form-row" v-if="aircraftClasses.length > 0">
     <div class="aircraft-class-select order-form-container">
@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="order-form-row order-form-container">
-    <div class="pre-order-info" v-if="preOrderInfo !== null">
+    <div class="pre-order-info" v-if="preOrderInfo">
       <span class="price">{{preOrderInfo.price}}<span class="price-currency">₽</span></span>
       <span class="time">{{preOrderInfo.route.time}} минут</span>
     </div>

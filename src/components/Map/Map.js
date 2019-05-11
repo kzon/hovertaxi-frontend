@@ -1,6 +1,6 @@
 import routes from '../../data/demo'
 import aircraftRequests from '../../utilities/requests/aircraftRequests'
-import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED} from '../../utilities/event/event'
+import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED, EVENT_PRE_ORDER_INFO_LOADED} from '../../utilities/event/event'
 
 //in ms
 const INTERVAL = 400;
@@ -35,11 +35,12 @@ export default {
         zoom: 12,
         controls: [],
       });
-
       // self.demoAircrafts();
       self.testRoutes();
       self.createPads();
-
+      eventBus.$on(EVENT_PRE_ORDER_INFO_LOADED, function (preOrderInfo) {
+        self.showRoute(preOrderInfo.route);
+      });
     }
   },
 
@@ -52,7 +53,7 @@ export default {
 
         routes.forEach(function (route, index) {
           let curIdx = 0;
-          let geoObject = self.createGeoObject([route[curIdx][1], route[curIdx][0]], index);
+          let geoObject = self.createPoint([route[curIdx][1], route[curIdx][0]], index);
           route.curIdx = curIdx;
           geoCollection.add(geoObject);
         });
@@ -82,10 +83,10 @@ export default {
         position = [pts[0], pts[1]];
       console.log('position ', position);
 
-      return this.createGeoObject(position, aircraft.id);
+      return this.createPoint(position, aircraft.id);
     },
 
-    createGeoObject(position, id) {
+    createPoint(position, id) {
       return new ymaps.GeoObject({
         geometry: {
           type: "Point",
@@ -95,10 +96,8 @@ export default {
           id: id
         }
       }, {
-        // options
         preset: 'islands#circleIcon',
         iconColor: '#3caa3c',
-        //user can't move this object
         draggable: false
       });
     },
@@ -154,6 +153,20 @@ export default {
         }
       });
       self.map.geoObjects.add(geoCollection);
+    },
+
+    showRoute(route) {
+      if (this.routeLine)
+        this.map.geoObjects.remove(this.routeLine);
+
+      this.routeLine = new ymaps.Polyline(route.points, {
+        hintContent: route.time + ' минут',
+      }, {
+        strokeColor: "#4292cc",
+        strokeWidth: 4,
+        strokeOpacity: 0.5
+      });
+      this.map.geoObjects.add(this.routeLine);
     }
   }
 }
