@@ -10,7 +10,8 @@ class Http {
     return fetch(url,
       {
         method: "GET",
-        mode: "cors"
+        mode: "cors",
+        credentials: "include",
       })
       .then(function(response){
         if(response.status >= 400) throw response;
@@ -26,6 +27,7 @@ class Http {
       method: "POST",
       mode: "cors",
       body: JSON.stringify(body),
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       }

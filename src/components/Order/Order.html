@@ -1,9 +1,9 @@
 <div class="order-form">
   <div class="order-form-row">
-    <input type="text" placeholder="Откуда" v-model="from_pad_id">
+    <input type="text" placeholder="Откуда" :value="from_pad === null ? '' : from_pad.name">
   </div>
   <div class="order-form-row">
-    <input type="text" placeholder="Куда" v-model="to_pad_id">
+    <input type="text" placeholder="Куда" :value="to_pad === null ? '' : to_pad.name">
   </div>
   <div class="order-form-row">
     <input type="text" placeholder="Класс ЛА" v-model="aircraft_class">

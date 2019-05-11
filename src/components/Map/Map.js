@@ -1,5 +1,6 @@
 import routes from '../../data/demo'
 import aircraftRequests from '../../utilities/requests/aircraftRequests'
+import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED} from '../../utilities/event/event'
 
 //in ms
 const INTERVAL = 400;
@@ -21,8 +22,6 @@ export default {
   data() {
     return {
       map: Object,
-      from_pad_id: null,
-      to_pad_id: null,
     }
   },
 
@@ -35,11 +34,6 @@ export default {
         center: [55.76, 37.64], // Москва
         zoom: 12,
         controls: [],
-      });
-
-      self.map.events.add('click', function (e) {
-        self.from_pad_id = 5;
-        self.to_pad_id = 6;
       });
 
       // self.demoAircrafts();
@@ -142,16 +136,18 @@ export default {
     },
 
     async createPads() {
-
       let self = this, position = [55.750512, 37.539209];
-
       let pads = await aircraftRequests.loadNearestPads(position);
       let geoCollection = new ymaps.GeoObjectCollection(null, presetForPad);
-
       pads.forEach(function (pad) {
         try {
           let pts = JSON.parse(pad.position), pos = [pts[0], pts[1]];
-          let geoObject = new ymaps.Placemark(pos, {}, presetForPad);
+          let geoObject = new ymaps.Placemark(pos, {
+            hintContent: pad.name,
+          }, presetForPad);
+          geoObject.events.add('click', () => {
+            eventBus.$emit(EVENT_AIRCRAFT_PAD_SELECTED, pad);
+          });
           geoCollection.add(geoObject);
         } catch (err) {
           console.log(err);
