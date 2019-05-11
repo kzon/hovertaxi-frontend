@@ -3,17 +3,17 @@
   top: 0;
   left: 0;
   z-index: 100000;
-  width: 270px;
+  width: 330px;
   padding: 20px;
 
-  .order-form-row {
-    margin-bottom: 10px;
+  .order-form-container {
+    box-shadow: 0 2px 4px 1px #afafaf66;
+    border-radius: 4px;
+  }
 
-    input, button {
-      box-shadow: 0 2px 4px 1px #afafaf66;
-      border-radius: 4px;
-      transition: all .3s;
-    }
+  .order-form-row {
+    position: relative;
+    margin-bottom: 10px;
 
     input {
       width: 100%;
@@ -21,14 +21,23 @@
       border: 2px solid #ffeb86;
       outline: none;
       font-size: 1.1em;
+      transition: all .3s;
+      color: #222;
 
       &:focus {
         border-color: #ffd501;
       }
 
       &::placeholder {
-        font-size: 0.8em;
+        font-size: .8em;
       }
+    }
+
+    .clear-button {
+      position: absolute;
+      top: 7px;
+      right: 7px;
+      cursor: pointer;
     }
 
     button.order-button {
@@ -39,10 +48,62 @@
       border: none;
       font-weight: bold;
       font-size: 1.2em;
+      transition: all .3s;
 
-      &:hover {
+      &:hover:not(:disabled) {
         background-color: #ffe251;
       }
+    }
+  }
+
+  .aircraft-class-select {
+    display: flex;
+    flex-wrap: wrap;
+    background: #fff;
+    padding: .7em;
+
+    .aircraft-class-item {
+      color: #6d6d6d;
+      background: #fbfbfb;
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 0.6em 0.6em;
+      margin: 0.5em;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9em;
+      transition: all .2s;
+
+      &:hover:not(.selected) {
+        background: #f7f7f7;
+        box-shadow: 0 7px 24px 2px #eaeaea;
+        bottom: 1px;
+        color: #000;
+      }
+
+      &.selected {
+        color: #000;
+        background: #ffeb86;
+        border-color: transparent;
+      }
+    }
+  }
+
+  .pre-order-info {
+    background: #fff;
+    padding: 0.7em .3em;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .price {
+    font-weight: bold;
+    font-size: 1.6em;
+
+    .price-currency {
+      font-weight: normal;
     }
   }
 }

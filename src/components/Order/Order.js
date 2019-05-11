@@ -1,35 +1,72 @@
 import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED} from '../../utilities/event/event'
 import orderRequests from '../../utilities/requests/orderRequests'
+import aircraftRequests from '../../utilities/requests/aircraftRequests'
+import Icon from '../Icon/index'
 
 export default {
   name: 'order',
-  components: {},
+  components: {Icon},
   props: [],
 
   data() {
     return {
-      from_pad: null,
-      to_pad: null,
-      aircraft_class: {id: '3333'},
+      selectedFromPad: null,
+      selectedToPad: null,
+      selectedAircraftClass: null,
+      aircraftClasses: [],
     }
   },
 
-  computed: {},
+  computed: {
+    preOrderInfo: function () {
+      if (!this.orderFieldsFilled)
+        return null;
 
-  created() {
-    eventBus.$on(EVENT_AIRCRAFT_PAD_SELECTED, pad => {
-      if (this.from_pad === null)
-        this.from_pad = pad;
-      else
-        this.to_pad = pad;
-    });
+      return {
+        "route": {
+          "points": [
+            [
+              58.1243,
+              32.42134
+            ],
+            [
+              58.1243,
+              32.42134
+            ],
+            [
+              58.1243,
+              32.42134
+            ]
+          ],
+          "time": 8
+        },
+        "price": 755
+      };
+    },
+
+    orderFieldsFilled: function () {
+      return this.selectedFromPad !== null && this.selectedToPad !== null && this.selectedAircraftClass !== null;
+    },
   },
 
-  mounted() {},
+  async mounted() {
+    eventBus.$on(EVENT_AIRCRAFT_PAD_SELECTED, pad => {
+      if (this.selectedFromPad === null)
+        this.selectedFromPad = pad;
+      else
+        this.selectedToPad = pad;
+    });
+
+    this.aircraftClasses = await aircraftRequests.loadAircraftClasses();
+  },
 
   methods: {
     order: function () {
-      orderRequests.createOrder(this.from_pad.id, this.to_pad.id, this.aircraft_class.id);
+      orderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
+    },
+
+    setAircraftClass: function (aircraftClass) {
+      this.selectedAircraftClass = aircraftClass;
     }
   }
 }

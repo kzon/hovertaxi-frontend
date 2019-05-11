@@ -58,7 +58,7 @@ export default {
         });
         self.map.geoObjects.add(geoCollection);
 
-        let timer = setInterval(function () {
+        setInterval(function () {
           let iterator = geoCollection.getIterator(), object;
           while ((object = iterator.getNext()) !== iterator.STOP_ITERATION) {
             let route = routes[object.properties.get("id")];
@@ -118,7 +118,7 @@ export default {
 
         self.map.geoObjects.add(geoCollection);
 
-        let timer = setInterval(async function () {
+        setInterval(async function () {
           let iterator = geoCollection.getIterator(), object;
           while ((object = iterator.getNext()) !== iterator.STOP_ITERATION) {
             let aircraft = aircrafts.find(a => a.id === object.properties.get("id"));
