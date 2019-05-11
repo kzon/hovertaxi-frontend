@@ -10,7 +10,7 @@ export default {
     return {
       from_pad: null,
       to_pad: null,
-      aircraft_class: {id: 3},
+      aircraft_class: {id: '3333'},
     }
   },
 
@@ -28,7 +28,7 @@ export default {
   mounted() {},
 
   methods: {
-    order: () => {
+    order: function () {
       orderRequests.createOrder(this.from_pad.id, this.to_pad.id, this.aircraft_class.id);
     }
   }

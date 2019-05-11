@@ -1,6 +1,6 @@
 'use strict';
 
-const baseUrl = 'http://localhost:8888';
+const baseUrl = '';
 
 class Http {
 
@@ -10,7 +10,6 @@ class Http {
     return fetch(url,
       {
         method: "GET",
-        mode: "cors",
         credentials: "include",
       })
       .then(function(response){
@@ -25,7 +24,6 @@ class Http {
 
     return fetch(url, {
       method: "POST",
-      mode: "cors",
       body: JSON.stringify(body),
       credentials: "include",
       headers: {
