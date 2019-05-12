@@ -1,3 +1,12 @@
 <div class="current-order">
-  <OrderInfo :order="order"></OrderInfo>
+  <div class="map-overlay-inner">
+    <div class="assigned-aircraft">
+      <div class="assigned-aircraft-name" v-if="order.assigned_aircraft"></div>
+      <div class="aircraft-searching" v-else>
+        <Icon icon="spinner-3"></Icon>
+        Поиск подходящих вариантов...
+      </div>
+    </div>
+    <OrderInfo :order="order"></OrderInfo>
+  </div>
 </div>

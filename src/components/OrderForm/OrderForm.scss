@@ -1,15 +1,5 @@
 .order-form {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 100000;
-  width: 330px;
-  padding: 20px;
-
-  .order-form-container {
-    box-shadow: 0 2px 4px 1px #afafaf66;
-    border-radius: 4px;
-  }
+  width: 290px;
 
   .order-form-row {
     position: relative;
@@ -18,14 +8,14 @@
     input {
       width: 100%;
       padding: .3em .6em;
-      border: 2px solid #ffeb86;
+      border: 2px solid var(--primary);
       outline: none;
       font-size: 1.1em;
       transition: all .3s;
       color: #222;
 
       &:focus {
-        border-color: #ffd501;
+        border-color: var(--primary-active);
       }
 
       &::placeholder {
@@ -42,7 +32,7 @@
 
     button.order-button {
       width: 100%;
-      background: #ffeb86;
+      background: var(--primary);
       padding: 0.8em .4em;
       outline: none;
       border: none;
@@ -51,7 +41,7 @@
       transition: all .3s;
 
       &:hover:not(:disabled) {
-        background-color: #ffe251;
+        background-color: var(--primary-active);
       }
     }
   }
@@ -84,7 +74,7 @@
 
       &.selected {
         color: #000;
-        background: #ffeb86;
+        background: var(--primary);
         border-color: transparent;
       }
     }

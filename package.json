@@ -12,7 +12,6 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "bootstrap-vue": "^2.0.0-rc.15",
     "geolib": "^2.0.24",
     "node-sass": "^4.12.0",
     "require": "^2.4.20",

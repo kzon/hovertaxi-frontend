@@ -1,0 +1,23 @@
+@import "../../reset.css";
+@import "../../global";
+
+#app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+
+.map-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100000;
+  margin: 20px;
+
+  .map-overlay-inner {
+    box-shadow: 0 2px 4px 1px #afafaf66;
+    border-radius: 4px;
+  }
+}

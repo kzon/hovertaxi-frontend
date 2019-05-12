@@ -1,0 +1,7 @@
+<div id="app">
+  <div class="map-overlay">
+    <OrderForm v-if="!currentOrder"></OrderForm>
+    <CurrentOrder v-if="currentOrder" :order="currentOrder"></CurrentOrder>
+  </div>
+  <Map></Map>
+</div>

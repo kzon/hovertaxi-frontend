@@ -1,16 +1,16 @@
 <div class="order-form" xmlns:v-bind="http://www.w3.org/1999/xhtml">
   <div class="order-form-row">
-    <input type="text" placeholder="Откуда – выберите площадку на карте" class="order-form-container" disabled
+    <input type="text" placeholder="Откуда – выберите площадку на карте" class="map-overlay-inner" disabled
            :value="selectedFromPad ? selectedFromPad.name : ''">
     <Icon class="clear-button" icon="close" v-show="selectedFromPad" @click.native="selectedFromPad = null"></Icon>
   </div>
   <div class="order-form-row">
-    <input type="text" placeholder="Куда – выберите площадку на карте" class="order-form-container" disabled
+    <input type="text" placeholder="Куда – выберите площадку на карте" class="map-overlay-inner" disabled
            :value="selectedToPad ? selectedToPad.name : ''">
     <Icon class="clear-button" icon="close" v-show="selectedToPad" @click.native="selectedToPad = null"></Icon>
   </div>
   <div class="order-form-row" v-if="aircraftClasses.length > 0">
-    <div class="aircraft-class-select order-form-container">
+    <div class="aircraft-class-select map-overlay-inner">
       <span class="aircraft-class-item"
             v-bind:class="{selected: selectedAircraftClass && aircraftClass.id === selectedAircraftClass.id}"
             v-for="aircraftClass in aircraftClasses"
@@ -19,7 +19,7 @@
       </span>
     </div>
   </div>
-  <div class="order-form-row order-form-container">
+  <div class="order-form-row map-overlay-inner">
     <OrderInfo :order="preOrderInfo" v-if="preOrderInfo && orderFieldsFilled"></OrderInfo>
     <button type="button" class="order-button" @click="order" :disabled="!orderFieldsFilled">Заказать</button>
   </div>
