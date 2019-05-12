@@ -4,7 +4,7 @@ import aircraftRequests from '../../utilities/requests/AircraftRequests'
 import Icon from '../Icon/index'
 
 export default {
-  name: 'order',
+  name: 'order-form',
   components: {Icon},
   props: [],
 

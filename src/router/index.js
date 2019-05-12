@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Order from '@/components/Order/index'
+import Order from '@/components/OrderForm/index'
 
 Vue.use(Router)
 

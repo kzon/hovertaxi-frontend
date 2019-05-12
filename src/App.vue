@@ -7,7 +7,7 @@
 
 <script>
   import Map from "./components/Map/index"
-  import Order from "./components/Order/index"
+  import Order from "./components/OrderForm/index"
 
   export default {
     name: 'App',
