@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="order-form-row order-form-container">
-    <div class="pre-order-info" v-if="preOrderInfo">
+    <div class="pre-order-info" v-if="preOrderInfo && orderFieldsFilled">
       <span class="price">{{preOrderInfo.price}}<span class="price-currency">₽</span></span>
       <span class="time">{{preOrderInfo.route.time}} минут</span>
     </div>

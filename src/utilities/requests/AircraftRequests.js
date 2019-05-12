@@ -20,7 +20,7 @@ export default class AircraftRequests {
   static loadNearestPads(position) {
     return HTTP.fetchPost('/api/aircraft/loadNearestPads', {
       position: position
-    });
+    }).then(pads => AircraftRequests.preparePads(pads));
   }
 
   static prepareAircrafts(aircrafts) {
@@ -31,6 +31,13 @@ export default class AircraftRequests {
       aircraft.is_assigned = JSON.parse(aircraft.is_assigned);
     }
     return aircrafts;
+  }
+
+  static preparePads(pads) {
+    for (let pad of pads) {
+      pad.position = JSON.parse(pad.position);
+    }
+    return pads;
   }
 
 }

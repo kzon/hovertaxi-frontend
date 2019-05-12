@@ -39,7 +39,7 @@ export default {
     event.eventBus.$on(event.EVENT_AIRCRAFT_PAD_SELECTED, pad => {
       if (this.selectedFromPad === null)
         this.selectedFromPad = pad;
-      else
+      else if (this.selectedFromPad.id !== pad.id)
         this.selectedToPad = pad;
     });
 

@@ -5,16 +5,6 @@ import * as event from '../../utilities/event/event'
 const AIRCRAFT_RELOAD_INTERVAL = 7000;
 const AIRCRAFT_RENDER_INTERVAL = 1000;
 
-const AIRCRAFT_POINT_STYLE = {
-  preset: 'islands#circleIcon',
-  iconColor: '#3caa3c'
-};
-
-const PAD_POINT_STYLE = {
-  preset: 'islands#circleDotIcon',
-  iconColor: '#1339aa'
-};
-
 export default {
   name: 'Map',
   components: {},
@@ -31,7 +21,7 @@ export default {
     const self = this;
     ymaps.ready(() => {
       self.map = self.makeMap();
-      self.loadNearestPads();
+      self.loadPads();
       self.loadAircrafts();
       event.eventBus.$on(event.EVENT_PRE_ORDER_INFO_LOADED, preOrderInfo => {
         self.showRoute(preOrderInfo.route);
@@ -45,36 +35,45 @@ export default {
         center: [55.76, 37.64],
         zoom: 12,
         controls: [],
+      }, {
+        suppressMapOpenBlock: true,
       })
     },
 
-    createGeoObjectFromAircraft(aircraft) {
-      return this.createPoint(aircraft.position, aircraft.id);
+    makeAircraftPlacemark(aircraft) {
+      return new ymaps.Placemark(aircraft.position, {}, {
+        iconLayout: ymaps.templateLayoutFactory.createClass(
+          '<div class="aircraft-placemark" style="transform: rotate({{options.rotate}}deg);">' +
+          '{% include "default#image" %}' +
+          '</div>'),
+        iconImageHref: 'assets/helicopter.png',
+        iconImageSize: [20, 20],
+        iconRotate: aircraft.direction,
+      });
     },
 
-    createPoint(position, id) {
-      return new ymaps.GeoObject({
-        geometry: {
-          type: "Point",
-          coordinates: position
+    makePadPlacemark(pad) {
+      return new ymaps.Placemark(pad.position, {}, {
+        iconLayout: ymaps.templateLayoutFactory.createClass(
+          '<span class="pad-placemark">' +
+          '{{options.name}}' +
+          '</span>'),
+        iconName: pad.name,
+        iconShape: {
+          type: 'Circle',
+          coordinates: [0, 0],
+          radius: 20,
         },
-        properties: {
-          id: id
-        }
-      }, {
-        preset: 'islands#circleIcon',
-        iconColor: '#3caa3c',
-        draggable: false
       });
     },
 
     async loadAircrafts() {
       try {
         const center = [55.76, 37.64], radius = 20000;
-        const aircraftsOnMap = new ymaps.GeoObjectCollection(null, AIRCRAFT_POINT_STYLE);
+        const aircraftsOnMap = new ymaps.GeoObjectCollection();
         const loadedAircrafts = await AircraftRequests.loadInCircle(center, radius);
         loadedAircrafts.forEach(aircraft => {
-          const geoObject = this.createGeoObjectFromAircraft(aircraft);
+          const geoObject = this.makeAircraftPlacemark(aircraft);
           aircraftsOnMap.add(geoObject);
           this.aircrafts.push({aircraft, geoObject});
         });
@@ -103,16 +102,13 @@ export default {
       return Geo.moveTo(aircraft.position, distance, aircraft.direction);
     },
 
-    async loadNearestPads() {
+    async loadPads() {
       const self = this, position = [55.750512, 37.539209];
       const pads = await AircraftRequests.loadNearestPads(position);
-      const padsOnMap = new ymaps.GeoObjectCollection(null, PAD_POINT_STYLE);
+      const padsOnMap = new ymaps.GeoObjectCollection();
       pads.forEach(function (pad) {
         try {
-          const position = JSON.parse(pad.position);
-          const placemark = new ymaps.Placemark(position, {
-            hintContent: pad.name,
-          }, PAD_POINT_STYLE);
+          const placemark = self.makePadPlacemark(pad);
           placemark.events.add('click', () => {
             event.eventBus.$emit(event.EVENT_AIRCRAFT_PAD_SELECTED, pad);
           });
