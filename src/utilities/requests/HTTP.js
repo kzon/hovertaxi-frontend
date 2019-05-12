@@ -2,9 +2,9 @@
 
 const baseUrl = '';
 
-class Http {
+class HTTP {
 
-  static fetchGet(path){
+  static fetchGet(path) {
     const url = baseUrl + path;
 
     return fetch(url,
@@ -12,14 +12,14 @@ class Http {
         method: "GET",
         credentials: "include",
       })
-      .then(function(response){
-        if(response.status >= 400) throw response;
+      .then(function (response) {
+        if (response.status >= 400) throw response;
 
         return response.json();
       });
   }
 
-  static fetchPost(path, body){
+  static fetchPost(path, body) {
     const url = baseUrl + path;
 
     return fetch(url, {
@@ -30,12 +30,12 @@ class Http {
         "Content-Type": "application/json"
       }
     })
-    .then(function(response){
-      if(response.status >= 400) throw response;
+      .then(function (response) {
+        if (response.status >= 400) throw response;
 
-      return response.json();
-    });
+        return response.json();
+      });
   }
 }
 
-export default Http;
+export default HTTP;

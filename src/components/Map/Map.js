@@ -1,15 +1,16 @@
-import routes from '../../data/demo'
-import aircraftRequests from '../../utilities/requests/aircraftRequests'
-import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED, EVENT_PRE_ORDER_INFO_LOADED} from '../../utilities/event/event'
+import AircraftRequests from '../../utilities/requests/AircraftRequests'
+import Geo from '../../utilities/geo/Geo'
+import * as event from '../../utilities/event/event'
 
-//in ms
-const INTERVAL = 400;
-const presetForAircraft = {
+const AIRCRAFT_RELOAD_INTERVAL = 7000;
+const AIRCRAFT_RENDER_INTERVAL = 1000;
+
+const AIRCRAFT_POINT_STYLE = {
   preset: 'islands#circleIcon',
   iconColor: '#3caa3c'
 };
 
-const presetForPad = {
+const PAD_POINT_STYLE = {
   preset: 'islands#circleDotIcon',
   iconColor: '#1339aa'
 };
@@ -22,68 +23,33 @@ export default {
   data() {
     return {
       map: Object,
+      aircrafts: [],
     }
   },
 
   created() {
-    var self = this;
-    ymaps.ready(init);
-
-    function init() {
-      self.map = new ymaps.Map('map', {
-        center: [55.76, 37.64], // Москва
-        zoom: 12,
-        controls: [],
-      });
-      // self.demoAircrafts();
-      self.testRoutes();
-      self.createPads();
-      eventBus.$on(EVENT_PRE_ORDER_INFO_LOADED, function (preOrderInfo) {
+    const self = this;
+    ymaps.ready(() => {
+      self.map = self.makeMap();
+      self.loadNearestPads();
+      self.loadAircrafts();
+      event.eventBus.$on(event.EVENT_PRE_ORDER_INFO_LOADED, preOrderInfo => {
         self.showRoute(preOrderInfo.route);
       });
-    }
+    });
   },
 
   methods: {
-    testRoutes() {
-      try {
-        let self = this;
-
-        let geoCollection = new ymaps.GeoObjectCollection(null, presetForAircraft);
-
-        routes.forEach(function (route, index) {
-          let curIdx = 0;
-          let geoObject = self.createPoint([route[curIdx][1], route[curIdx][0]], index);
-          route.curIdx = curIdx;
-          geoCollection.add(geoObject);
-        });
-        self.map.geoObjects.add(geoCollection);
-
-        setInterval(function () {
-          let iterator = geoCollection.getIterator(), object;
-          while ((object = iterator.getNext()) !== iterator.STOP_ITERATION) {
-            let route = routes[object.properties.get("id")];
-            route.curIdx = route.curIdx + 1;
-            let coords = route[route.curIdx];
-            if (coords !== undefined) {
-              let pos = [coords[1], coords[0]];
-              object.geometry.setCoordinates(pos);
-            }
-          }
-
-        }, INTERVAL);
-      } catch (error) {
-        console.log(error);
-      }
-
+    makeMap() {
+      return new ymaps.Map('map', {
+        center: [55.76, 37.64],
+        zoom: 12,
+        controls: [],
+      })
     },
 
     createGeoObjectFromAircraft(aircraft) {
-      let pts = JSON.parse(aircraft.position),
-        position = [pts[0], pts[1]];
-      console.log('position ', position);
-
-      return this.createPoint(position, aircraft.id);
+      return this.createPoint(aircraft.position, aircraft.id);
     },
 
     createPoint(position, id) {
@@ -102,57 +68,60 @@ export default {
       });
     },
 
-    async demoAircrafts() {
+    async loadAircrafts() {
       try {
-        let self = this,
-          center = [55.76, 37.64], radius = 20000;
-
-        let aircrafts = await aircraftRequests.loadInCircle(center, radius);
-        let geoCollection = new ymaps.GeoObjectCollection(null, presetForAircraft);
-
-        aircrafts.forEach(aircraft => {
-          let geoObject = self.createGeoObjectFromAircraft(aircraft);
-          geoCollection.add(geoObject);
+        const center = [55.76, 37.64], radius = 20000;
+        const aircraftsOnMap = new ymaps.GeoObjectCollection(null, AIRCRAFT_POINT_STYLE);
+        const loadedAircrafts = await AircraftRequests.loadInCircle(center, radius);
+        loadedAircrafts.forEach(aircraft => {
+          const geoObject = this.createGeoObjectFromAircraft(aircraft);
+          aircraftsOnMap.add(geoObject);
+          this.aircrafts.push({aircraft, geoObject});
         });
+        this.map.geoObjects.add(aircraftsOnMap);
 
-        self.map.geoObjects.add(geoCollection);
-
-        setInterval(async function () {
-          let iterator = geoCollection.getIterator(), object;
-          while ((object = iterator.getNext()) !== iterator.STOP_ITERATION) {
-            let aircraft = aircrafts.find(a => a.id === object.properties.get("id"));
-            let pts = JSON.parse(aircraft.position), position = [pts[0], pts[1]];
-            object.geometry.setCoordinates(position);
-          }
-
-          aircrafts = await aircraftRequests.loadInCircle(center, radius);
-
-        }, INTERVAL);
-
+        setInterval(this.reloadAircrafts, AIRCRAFT_RELOAD_INTERVAL);
+        setInterval(this.renderAircraftsPositions, AIRCRAFT_RENDER_INTERVAL);
       } catch (error) {
         console.error(error);
       }
     },
 
-    async createPads() {
-      let self = this, position = [55.750512, 37.539209];
-      let pads = await aircraftRequests.loadNearestPads(position);
-      let geoCollection = new ymaps.GeoObjectCollection(null, presetForPad);
+    async reloadAircrafts() {
+      // aircrafts = await AircraftRequests.loadInCircle(center, radius);
+    },
+
+    renderAircraftsPositions() {
+      for (let aircraft of this.aircrafts) {
+        aircraft.aircraft.position = this.getNextAircraftPosition(aircraft.aircraft);
+        aircraft.geoObject.geometry.setCoordinates(aircraft.aircraft.position);
+      }
+    },
+
+    getNextAircraftPosition(aircraft) {
+      const distance = Geo.kilometerPerHourToMeterPerSecond(aircraft.speed) * AIRCRAFT_RENDER_INTERVAL / 1000;
+      return Geo.moveTo(aircraft.position, distance, aircraft.direction);
+    },
+
+    async loadNearestPads() {
+      const self = this, position = [55.750512, 37.539209];
+      const pads = await AircraftRequests.loadNearestPads(position);
+      const padsOnMap = new ymaps.GeoObjectCollection(null, PAD_POINT_STYLE);
       pads.forEach(function (pad) {
         try {
-          let pts = JSON.parse(pad.position), pos = [pts[0], pts[1]];
-          let geoObject = new ymaps.Placemark(pos, {
+          const position = JSON.parse(pad.position);
+          const placemark = new ymaps.Placemark(position, {
             hintContent: pad.name,
-          }, presetForPad);
-          geoObject.events.add('click', () => {
-            eventBus.$emit(EVENT_AIRCRAFT_PAD_SELECTED, pad);
+          }, PAD_POINT_STYLE);
+          placemark.events.add('click', () => {
+            event.eventBus.$emit(event.EVENT_AIRCRAFT_PAD_SELECTED, pad);
           });
-          geoCollection.add(geoObject);
+          padsOnMap.add(placemark);
         } catch (err) {
           console.log(err);
         }
       });
-      self.map.geoObjects.add(geoCollection);
+      self.map.geoObjects.add(padsOnMap);
     },
 
     showRoute(route) {

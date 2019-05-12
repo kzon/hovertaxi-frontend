@@ -1,6 +1,6 @@
-import {eventBus, EVENT_AIRCRAFT_PAD_SELECTED, EVENT_PRE_ORDER_INFO_LOADED} from '../../utilities/event/event'
-import orderRequests from '../../utilities/requests/orderRequests'
-import aircraftRequests from '../../utilities/requests/aircraftRequests'
+import * as event from '../../utilities/event/event'
+import OrderRequests from '../../utilities/requests/OrderRequests'
+import aircraftRequests from '../../utilities/requests/AircraftRequests'
 import Icon from '../Icon/index'
 
 export default {
@@ -27,16 +27,16 @@ export default {
   watch: {
     orderFieldsFilled: async function () {
       if (this.orderFieldsFilled) {
-        this.preOrderInfo = await orderRequests.getPreOrderInfo(
+        this.preOrderInfo = await OrderRequests.getPreOrderInfo(
           this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id
         );
-        eventBus.$emit(EVENT_PRE_ORDER_INFO_LOADED, this.preOrderInfo);
+        event.eventBus.$emit(event.EVENT_PRE_ORDER_INFO_LOADED, this.preOrderInfo);
       }
     }
   },
 
   async mounted() {
-    eventBus.$on(EVENT_AIRCRAFT_PAD_SELECTED, pad => {
+    event.eventBus.$on(event.EVENT_AIRCRAFT_PAD_SELECTED, pad => {
       if (this.selectedFromPad === null)
         this.selectedFromPad = pad;
       else
@@ -48,7 +48,7 @@ export default {
 
   methods: {
     order: function () {
-      orderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
+      OrderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
     },
 
     setAircraftClass: function (aircraftClass) {
