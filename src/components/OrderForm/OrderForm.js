@@ -4,7 +4,7 @@ import aircraftRequests from '../../utilities/requests/AircraftRequests'
 import Icon from '../Icon/index'
 
 export default {
-  name: 'order-form',
+  name: 'OrderForm',
   components: {Icon},
   props: [],
 
@@ -47,8 +47,13 @@ export default {
   },
 
   methods: {
-    order: function () {
-      OrderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
+    order: async function () {
+      const order = await OrderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
+      if (order && order.id) {
+        event.eventBus.$emit(event.EVENT_ORDER_CREATED, order);
+      } else {
+        alert('Не удалось создать заказ');
+      }
     },
 
     updateOrderInfo: function () {

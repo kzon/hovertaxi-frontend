@@ -6,7 +6,7 @@ export default class AircraftRequests {
     return HTTP.fetchPost('/api/aircraft/loadInCircle', {
       center: center,
       radius: radius,
-    }).then(aircrafts => AircraftRequests.prepareAircrafts(aircrafts));
+    }).then(aircrafts => AircraftRequests._prepareAircrafts(aircrafts));
   }
 
   static loadCurrentOrderAircraft() {
@@ -20,10 +20,10 @@ export default class AircraftRequests {
   static loadNearestPads(position) {
     return HTTP.fetchPost('/api/aircraft/loadNearestPads', {
       position: position
-    }).then(pads => AircraftRequests.preparePads(pads));
+    }).then(pads => AircraftRequests._preparePads(pads));
   }
 
-  static prepareAircrafts(aircrafts) {
+  static _prepareAircrafts(aircrafts) {
     for (let aircraft of aircrafts) {
       aircraft.position = JSON.parse(aircraft.position);
       aircraft.direction = JSON.parse(aircraft.direction);
@@ -33,7 +33,7 @@ export default class AircraftRequests {
     return aircrafts;
   }
 
-  static preparePads(pads) {
+  static _preparePads(pads) {
     for (let pad of pads) {
       pad.position = JSON.parse(pad.position);
     }

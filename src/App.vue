@@ -1,19 +1,35 @@
 <template>
   <div id="app">
-    <router-view/>
+    <OrderForm v-if="!currentOrder"></OrderForm>
     <Map></Map>
   </div>
 </template>
 
 <script>
-  import Map from "./components/Map/index"
-  import Order from "./components/OrderForm/index"
+  import Map from './components/Map/index'
+  import OrderForm from './components/OrderForm/index'
+  import * as event from './utilities/event/event'
+  import LocalStorage from './utilities/localStorage/LocalStorage'
 
   export default {
     name: 'App',
     components: {
+      OrderForm,
       Map,
-      Order
+    },
+
+    data() {
+      return {
+        currentOrder: null,
+      };
+    },
+
+    mounted() {
+      this.currentOrder = LocalStorage.getCurrentOrder();
+      event.eventBus.$on(event.EVENT_ORDER_CREATED, order => {
+        this.currentOrder = order;
+        LocalStorage.setCurrentOrder(order);
+      });
     }
   }
 </script>
