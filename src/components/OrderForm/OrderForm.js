@@ -2,10 +2,14 @@ import * as event from '../../utilities/event/event'
 import OrderRequests from '../../utilities/requests/OrderRequests'
 import aircraftRequests from '../../utilities/requests/AircraftRequests'
 import Icon from '../Icon/index'
+import OrderInfo from '../OrderInfo/index'
 
 export default {
   name: 'OrderForm',
-  components: {Icon},
+  components: {
+    Icon,
+    OrderInfo,
+  },
   props: [],
 
   data() {

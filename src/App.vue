@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <OrderForm v-if="!currentOrder"></OrderForm>
+    <CurrentOrder v-if="currentOrder" :order="currentOrder"></CurrentOrder>
     <Map></Map>
   </div>
 </template>
@@ -8,6 +9,7 @@
 <script>
   import Map from './components/Map/index'
   import OrderForm from './components/OrderForm/index'
+  import CurrentOrder from './components/CurrentOrder/index'
   import * as event from './utilities/event/event'
   import LocalStorage from './utilities/localStorage/LocalStorage'
 
@@ -15,6 +17,7 @@
     name: 'App',
     components: {
       OrderForm,
+      CurrentOrder,
       Map,
     },
 

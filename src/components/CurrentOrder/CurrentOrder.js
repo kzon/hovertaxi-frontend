@@ -1,12 +1,13 @@
+import OrderInfo from '../OrderInfo/index'
+
 export default {
-  name: 'Map',
-  components: {},
-  props: [],
+  name: 'CurrentOrder',
+  components: [
+    OrderInfo,
+  ],
+  props: ['order'],
 
   data() {
-    return {
-      map: Object,
-      aircrafts: [],
-    }
+    return {}
   },
 }

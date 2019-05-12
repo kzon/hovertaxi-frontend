@@ -2,7 +2,7 @@
   <div class="order-form-row">
     <input type="text" placeholder="Откуда – выберите площадку на карте" class="order-form-container" disabled
            :value="selectedFromPad ? selectedFromPad.name : ''">
-      <Icon class="clear-button" icon="close" v-show="selectedFromPad" @click.native="selectedFromPad = null"></Icon>
+    <Icon class="clear-button" icon="close" v-show="selectedFromPad" @click.native="selectedFromPad = null"></Icon>
   </div>
   <div class="order-form-row">
     <input type="text" placeholder="Куда – выберите площадку на карте" class="order-form-container" disabled
@@ -11,7 +11,8 @@
   </div>
   <div class="order-form-row" v-if="aircraftClasses.length > 0">
     <div class="aircraft-class-select order-form-container">
-      <span class="aircraft-class-item" v-bind:class="{selected: selectedAircraftClass && aircraftClass.id === selectedAircraftClass.id}"
+      <span class="aircraft-class-item"
+            v-bind:class="{selected: selectedAircraftClass && aircraftClass.id === selectedAircraftClass.id}"
             v-for="aircraftClass in aircraftClasses"
             @click="selectedAircraftClass = aircraftClass">
         {{aircraftClass.name}}
@@ -19,10 +20,7 @@
     </div>
   </div>
   <div class="order-form-row order-form-container">
-    <div class="pre-order-info" v-if="preOrderInfo && orderFieldsFilled">
-      <span class="price">{{preOrderInfo.price}}<span class="price-currency">₽</span></span>
-      <span class="time">{{preOrderInfo.route.time}} минут</span>
-    </div>
+    <OrderInfo :order="preOrderInfo" v-if="preOrderInfo && orderFieldsFilled"></OrderInfo>
     <button type="button" class="order-button" @click="order" :disabled="!orderFieldsFilled">Заказать</button>
   </div>
 </div>

@@ -1,5 +1,5 @@
-<template src="./Map.html"></template>
-<script src="./Map.js"></script>
-<style src="./Map.scss" lang="scss"></style>
+<template src="./CurrentOrder.html"></template>
+<script src="./CurrentOrder.js"></script>
+<style src="./CurrentOrder.scss" lang="scss"></style>
 
 
