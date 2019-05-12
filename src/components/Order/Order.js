@@ -51,8 +51,8 @@ export default {
       OrderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
     },
 
-    setAircraftClass: function (aircraftClass) {
-      this.selectedAircraftClass = aircraftClass;
+    updateOrderInfo: function () {
+      OrderRequests.loadCurrentOrder();
     }
   }
 }

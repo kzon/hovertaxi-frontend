@@ -18,8 +18,8 @@ export default class OrderRequests {
     });
   }
 
-  static getOrderInfo() {
-    return HTTP.fetchGet('/api/order/getOrderInfo');
+  static loadCurrentOrder() {
+    return HTTP.fetchGet('/api/order/loadCurrentOrder');
   }
 
   static cancelOrder() {

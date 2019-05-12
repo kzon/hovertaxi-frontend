@@ -13,7 +13,7 @@
     <div class="aircraft-class-select order-form-container">
       <span class="aircraft-class-item" v-bind:class="{selected: selectedAircraftClass && aircraftClass.id === selectedAircraftClass.id}"
             v-for="aircraftClass in aircraftClasses"
-            @click="setAircraftClass(aircraftClass)">
+            @click="selectedAircraftClass = aircraftClass">
         {{aircraftClass.name}}
       </span>
     </div>
