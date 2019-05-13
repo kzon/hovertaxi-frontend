@@ -122,7 +122,7 @@ export default {
 
     showRoute(route) {
       if (this.routeLine)
-        this.map.geoObjects._remove(this.routeLine);
+        this.map.geoObjects.remove(this.routeLine);
 
       this.routeLine = new ymaps.Polyline(route.points, {
         hintContent: route.time + ' минут',
