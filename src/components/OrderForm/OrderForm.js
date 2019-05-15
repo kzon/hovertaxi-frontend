@@ -53,7 +53,7 @@ export default {
   methods: {
     order: async function () {
       const order = await OrderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
-      if (order && order.id) {
+      if (order) {
         event.eventBus.$emit(event.EVENT_ORDER_CREATED, order);
       } else {
         alert('Не удалось создать заказ');
