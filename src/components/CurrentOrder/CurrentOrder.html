@@ -2,6 +2,7 @@
   <div class="map-overlay-inner">
     <div class="assigned-aircraft-container">
       <div class="assigned-aircraft" v-if="order.assigned_aircraft && order.assigned_aircraft.number">
+        <span class="assigned-aircraft-class">{{order.aircraft_class.name}}</span>
         <span class="assigned-aircraft-model">{{order.assigned_aircraft_model.name}}</span>
         <span class="assigned-aircraft-number">
           <span class="assigned-aircraft-number-sign">№</span>
