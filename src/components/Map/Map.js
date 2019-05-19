@@ -5,10 +5,13 @@ import * as event from '../../utilities/event/event'
 const AIRCRAFT_RELOAD_INTERVAL = 7000;
 const AIRCRAFT_RENDER_INTERVAL = 1000;
 
+const ASSET_HELICOPTER_IMAGE = 'assets/helicopter.png';
+const ASSET_HELICOPTER_ACTIVE_IMAGE = 'assets/helicopter-active.png';
+
 export default {
   name: 'Map',
   components: {},
-  props: [],
+  props: ['currentOrder'],
 
   data() {
     return {
@@ -26,6 +29,7 @@ export default {
       event.eventBus.$on(event.EVENT_PRE_ORDER_INFO_LOADED, preOrderInfo => {
         self.showRoute(preOrderInfo.route);
       });
+      event.eventBus.$on(event.EVENT_AIRCRAFT_ASSIGNED, self.markAssignedAircraft);
     });
   },
 
@@ -41,12 +45,15 @@ export default {
     },
 
     makeAircraftPlacemark(aircraft) {
+      let image = ASSET_HELICOPTER_IMAGE;
+      if (this.currentOrder && aircraft.id === this.currentOrder.assigned_aircraft.id)
+        image = ASSET_HELICOPTER_ACTIVE_IMAGE;
       return new ymaps.Placemark(aircraft.position, {}, {
         iconLayout: ymaps.templateLayoutFactory.createClass(
           '<div class="aircraft-placemark" style="transform: rotate({{options.rotate}}deg);">' +
           '{% include "default#image" %}' +
           '</div>'),
-        iconImageHref: 'assets/helicopter.png',
+        iconImageHref: image,
         iconImageSize: [20, 20],
         iconRotate: aircraft.direction,
       });
@@ -69,7 +76,7 @@ export default {
 
     async loadAircrafts() {
       try {
-        const center = [55.76, 37.64], radius = 20000;
+        const center = [55.76, 37.64], radius = 20000;  // to capture all aircrafts in city
         const aircraftsOnMap = new ymaps.GeoObjectCollection();
         const loadedAircrafts = await AircraftRequests.loadInCircle(center, radius);
         loadedAircrafts.forEach(aircraft => {
@@ -94,6 +101,14 @@ export default {
       for (let aircraft of this.aircrafts) {
         aircraft.aircraft.position = this.getNextAircraftPosition(aircraft.aircraft);
         aircraft.geoObject.geometry.setCoordinates(aircraft.aircraft.position);
+      }
+    },
+
+    markAssignedAircraft(assigned_aircraft) {
+      const assigned_aircraft_on_map = this.aircrafts.find(aircraft => aircraft.aircraft.id === assigned_aircraft.id);
+      if (assigned_aircraft_on_map) {
+        console.log(assigned_aircraft_on_map.geoObject);
+        assigned_aircraft_on_map.geoObject.options.set('iconImageHref', ASSET_HELICOPTER_ACTIVE_IMAGE);
       }
     },
 

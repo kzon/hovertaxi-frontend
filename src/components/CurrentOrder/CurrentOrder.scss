@@ -1,6 +1,23 @@
-.assigned-aircraft {
+.assigned-aircraft-container {
   background: #fff;
-  padding: 20px;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 5em 3em;
+}
+
+.assigned-aircraft {
+  display: flex;
+  flex-direction: column;
+
+  .assigned-aircraft-model {
+    font-size: 2em;
+  }
+
+  .assigned-aircraft-number {
+    &-sign {
+      opacity: .7;
+      font-size: 0.8em;
+    }
+  }
 }
 
 .aircraft-searching {

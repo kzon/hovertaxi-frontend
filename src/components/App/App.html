@@ -3,5 +3,5 @@
     <OrderForm v-if="!currentOrder"></OrderForm>
     <CurrentOrder v-if="currentOrder" :order="currentOrder"></CurrentOrder>
   </div>
-  <Map></Map>
+  <Map :currentOrder="currentOrder"></Map>
 </div>

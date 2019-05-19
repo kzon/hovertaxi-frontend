@@ -36,8 +36,11 @@ export default {
   methods: {
     async updateCurrentOrder() {
       const order = await OrderRequests.loadCurrentOrder();
-      if (order !== null)
+      if (order !== null) {
+        if (!this.currentOrder.assigned_aircraft.id && order.assigned_aircraft && order.assigned_aircraft.id)
+          event.eventBus.$emit(event.EVENT_AIRCRAFT_ASSIGNED, order.assigned_aircraft);
         this.currentOrder = order;
+      }
     },
   },
 }

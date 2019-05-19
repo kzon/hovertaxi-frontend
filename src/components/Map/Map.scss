@@ -5,8 +5,9 @@
 
 .pad-placemark {
   position: relative;
-  right: 23px;
-  top: 13px;
+  transform: translateX(-50%);
+  top: 10px;
+  display: inline-block;
   font-size: .7em;
   text-shadow: 2px 0 0 #fff, -2px 0 0 #fff, 0 2px 0 #fff, 0 -2px 0 #fff, 1px 1px #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff;
 
