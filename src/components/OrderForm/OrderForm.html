@@ -21,6 +21,6 @@
   </div>
   <div class="order-form-row map-overlay-inner">
     <OrderInfo :order="preOrderInfo" v-if="preOrderInfo && orderFieldsFilled"></OrderInfo>
-    <button type="button" class="order-button" @click="order" :disabled="!orderFieldsFilled">Заказать</button>
+    <button type="button" class="order-button" @click="createOrder" :disabled="!orderFieldsFilled">Заказать</button>
   </div>
 </div>

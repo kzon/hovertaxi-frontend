@@ -51,7 +51,7 @@ export default {
   },
 
   methods: {
-    order: async function () {
+    createOrder: async function () {
       const order = await OrderRequests.createOrder(this.selectedFromPad.id, this.selectedToPad.id, this.selectedAircraftClass.id);
       if (order) {
         event.eventBus.$emit(event.EVENT_ORDER_CREATED, order);
@@ -59,9 +59,5 @@ export default {
         alert('Не удалось создать заказ');
       }
     },
-
-    updateOrderInfo: function () {
-      OrderRequests.loadCurrentOrder();
-    }
   }
 }
