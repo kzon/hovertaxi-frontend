@@ -140,7 +140,7 @@ export default {
         this.map.geoObjects.remove(this.routeLine);
 
       this.routeLine = new ymaps.Polyline(route.points, {
-        hintContent: route.time + ' минут',
+        hintContent: route.time + ' мин.',
       }, {
         strokeColor: "#4292cc",
         strokeWidth: 4,

@@ -1,19 +1,26 @@
 <div class="current-order">
   <div class="map-overlay-inner">
+
     <div class="assigned-aircraft-container">
       <div class="assigned-aircraft" v-if="order.assigned_aircraft && order.assigned_aircraft.number">
-        <span class="assigned-aircraft-class">{{order.aircraft_class.name}}</span>
         <span class="assigned-aircraft-model">{{order.assigned_aircraft_model.name}}</span>
         <span class="assigned-aircraft-number">
           <span class="assigned-aircraft-number-sign">№</span>
           {{order.assigned_aircraft.number}}
         </span>
+        <span class="time-to-arrival">
+          <Icon icon="arrow-down"></Icon>
+          {{order.status === 'on_fly' ? 'Прибытие через' : 'Будет через'}}
+          {{order.time_to_arrival}} мин.
+        </span>
       </div>
+
       <div class="aircraft-searching" v-else>
         <Icon icon="spinner-3"></Icon>
         Поиск подходящих вариантов...
       </div>
     </div>
+
     <OrderInfo :order="order"></OrderInfo>
   </div>
 </div>

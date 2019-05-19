@@ -49,6 +49,7 @@ export default class OrderRequests {
     order.assigned_aircraft = JSON.parse(order.assigned_aircraft);
     order.assigned_aircraft = AircraftRequests.prepareAircraft(order.assigned_aircraft);
     order.assigned_aircraft_model = JSON.parse(order.assigned_aircraft_model);
+    order.time_to_arrival = JSON.parse(order.time_to_arrival);
     return order;
   }
 

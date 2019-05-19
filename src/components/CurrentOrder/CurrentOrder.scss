@@ -8,10 +8,6 @@
   display: flex;
   flex-direction: column;
 
-  .assigned-aircraft-class {
-
-  }
-
   .assigned-aircraft-model {
     font-size: 2em;
   }
@@ -21,6 +17,12 @@
       opacity: .7;
       font-size: 0.8em;
     }
+  }
+}
+
+.time-to-arrival {
+  .icon {
+    color: #4292cc;
   }
 }
 
