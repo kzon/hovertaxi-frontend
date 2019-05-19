@@ -19,7 +19,8 @@ export default class OrderRequests {
   }
 
   static loadCurrentOrder() {
-    return HTTP.fetchGet('/api/order/loadCurrentOrder');
+    return HTTP.fetchGet('/api/order/loadCurrentOrder')
+      .then(order => OrderRequests._prepareOrder(order));
   }
 
   static cancelOrder() {
@@ -33,6 +34,14 @@ export default class OrderRequests {
     preOrder.route.time = JSON.parse(preOrder.route.time);
     preOrder.route.altitude = JSON.parse(preOrder.route.altitude);
     return preOrder;
+  }
+
+  static _prepareOrder(order) {
+    order.price = JSON.parse(order.price);
+    order.route = JSON.parse(order.route);
+    order.route.points = JSON.parse(order.route.points);
+    order.route.time = JSON.parse(order.route.time);
+    return order;
   }
 
 }
