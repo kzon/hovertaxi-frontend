@@ -4,14 +4,14 @@ export default class AircraftRequests {
 
   static loadAircraftById(id) {
     return HTTP.fetchGet('/api/aircraft/load/' + id)
-      .then(aircraft => AircraftRequests._prepareAircraft(aircraft));
+      .then(aircraft => AircraftRequests.prepareAircraft(aircraft));
   }
 
   static loadInCircle(center, radius) {
     return HTTP.fetchPost('/api/aircraft/loadInCircle', {
       center: center,
       radius: radius,
-    }).then(aircrafts => AircraftRequests._prepareAircrafts(aircrafts));
+    }).then(aircrafts => AircraftRequests.prepareAircrafts(aircrafts));
   }
 
   static loadCurrentOrderAircraft() {
@@ -25,17 +25,19 @@ export default class AircraftRequests {
   static loadNearestPads(position) {
     return HTTP.fetchPost('/api/aircraft/loadNearestPads', {
       position: position
-    }).then(pads => AircraftRequests._preparePads(pads));
+    }).then(pads => AircraftRequests.preparePads(pads));
   }
 
-  static _prepareAircrafts(aircrafts) {
+  static prepareAircrafts(aircrafts) {
     for (let aircraft of aircrafts) {
-      aircraft = AircraftRequests._prepareAircraft(aircraft);
+      aircraft = AircraftRequests.prepareAircraft(aircraft);
     }
     return aircrafts;
   }
 
-  static _prepareAircraft(aircraft) {
+  static prepareAircraft(aircraft) {
+    if (aircraft === null)
+      return null;
     aircraft.position = JSON.parse(aircraft.position);
     aircraft.direction = JSON.parse(aircraft.direction);
     aircraft.speed = JSON.parse(aircraft.speed);
@@ -43,7 +45,9 @@ export default class AircraftRequests {
     return aircraft;
   }
 
-  static _preparePads(pads) {
+  static preparePads(pads) {
+    if (pads === null)
+      return [];
     for (let pad of pads) {
       pad.position = JSON.parse(pad.position);
     }

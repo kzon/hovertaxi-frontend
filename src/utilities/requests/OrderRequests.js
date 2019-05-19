@@ -1,4 +1,5 @@
 import HTTP from './HTTP.js';
+import AircraftRequests from "./AircraftRequests"
 
 export default class OrderRequests {
 
@@ -7,7 +8,7 @@ export default class OrderRequests {
       from_pad_id: from,
       to_pad_id: to,
       aircraft_class_id: aircraftClass,
-    }).then(preOrder => OrderRequests._preparePreOrder(preOrder));
+    }).then(preOrder => OrderRequests.preparePreOrder(preOrder));
   }
 
   static createOrder(from, to, aircraftClass) {
@@ -20,14 +21,16 @@ export default class OrderRequests {
 
   static loadCurrentOrder() {
     return HTTP.fetchGet('/api/order/loadCurrentOrder')
-      .then(order => OrderRequests._prepareOrder(order));
+      .then(order => OrderRequests.prepareOrder(order));
   }
 
   static cancelOrder() {
     return HTTP.fetchPost('/api/order/cancelOrder', {});
   }
 
-  static _preparePreOrder(preOrder) {
+  static preparePreOrder(preOrder) {
+    if (preOrder === null)
+      return null;
     preOrder.price = JSON.parse(preOrder.price);
     preOrder.route = JSON.parse(preOrder.route);
     preOrder.route.points = JSON.parse(preOrder.route.points);
@@ -36,12 +39,25 @@ export default class OrderRequests {
     return preOrder;
   }
 
-  static _prepareOrder(order) {
+  static prepareOrder(order) {
+    if (order === null)
+      return null;
     order.price = JSON.parse(order.price);
     order.route = JSON.parse(order.route);
-    order.route.points = JSON.parse(order.route.points);
-    order.route.time = JSON.parse(order.route.time);
+    order.route = OrderRequests.prepareRoute(order.route);
+    order.aircraft_class = JSON.parse(order.aircraft_class);
+    order.assigned_aircraft = JSON.parse(order.assigned_aircraft);
+    order.assigned_aircraft = AircraftRequests.prepareAircraft(order.assigned_aircraft);
+    order.assigned_aircraft_model = JSON.parse(order.assigned_aircraft_model);
     return order;
+  }
+
+  static prepareRoute(route) {
+    if (route === null)
+      return null;
+    route.points = JSON.parse(route.points);
+    route.time = JSON.parse(route.time);
+    return route;
   }
 
 }
