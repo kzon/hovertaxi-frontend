@@ -16,7 +16,7 @@ export default class OrderRequests {
       from_pad_id: from,
       to_pad_id: to,
       aircraft_class_id: aircraftClass,
-    });
+    }).then(order => OrderRequests.prepareOrder(order));
   }
 
   static loadCurrentOrder() {
